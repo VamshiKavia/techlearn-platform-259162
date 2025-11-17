@@ -1,82 +1,77 @@
-# Lightweight React Template for KAVIA
+# LMS Frontend (React) - Ocean Professional Theme
 
-This project provides a minimal React template with a clean, modern UI and minimal dependencies.
+Production-ready scaffolding for the LMS with role-aware layout (Admin, Instructor, Student), routing, feature flags, and Supabase placeholder integration.
 
-## Features
+## Quick Start
 
-- **Lightweight**: No heavy UI frameworks - uses only vanilla CSS and React
-- **Modern UI**: Clean, responsive design with KAVIA brand styling
-- **Fast**: Minimal dependencies for quick loading times
-- **Simple**: Easy to understand and modify
+1. Install dependencies:
+   - npm install
 
-## Getting Started
+2. Configure environment (copy and edit placeholders):
+   - cp .env.example .env
+   - Fill only the variables you need. Do not commit secrets.
 
-In the project directory, you can run:
+3. Run:
+   - npm start
+   - Open http://localhost:3000
 
-### `npm start`
+## Routes
 
-Runs the app in development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- /login — Placeholder auth UI (no real auth)
+- /dashboard — Role-aware landing (Admin/Instructor/Student mock dashboards)
+- /health — Health screen showing OK and configured health path
 
-### `npm test`
+Use the role selector in the sidebar to switch roles.
 
-Launches the test runner in interactive watch mode.
+## Configuration
 
-### `npm run build`
+All config is read from environment variables (Create React App):
+- API base: REACT_APP_API_BASE
+- Backend/Frontend URLs: REACT_APP_BACKEND_URL, REACT_APP_FRONTEND_URL
+- WebSocket URL: REACT_APP_WS_URL
+- Health path: REACT_APP_HEALTHCHECK_PATH
+- Logging: REACT_APP_LOG_LEVEL (error|warn|info|debug|trace)
+- Feature Flags: REACT_APP_FEATURE_FLAGS (JSON or comma-separated)
+- Experiments: REACT_APP_EXPERIMENTS_ENABLED (true/false)
+- Supabase (optional): REACT_APP_SUPABASE_URL, REACT_APP_SUPABASE_KEY
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+See .env.example for the full list.
 
-## Customization
+## Supabase
 
-### Colors
+Supabase SDK is lazily initialized only if REACT_APP_SUPABASE_URL and REACT_APP_SUPABASE_KEY are provided. Otherwise a warning is logged and no client is created. No secrets are hardcoded.
 
-The main brand colors are defined as CSS variables in `src/App.css`:
+## Theming
 
-```css
-:root {
-  --kavia-orange: #E87A41;
-  --kavia-dark: #1A1A1A;
-  --text-color: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --border-color: rgba(255, 255, 255, 0.1);
-}
-```
+Ocean Professional minimalist theme:
+- Primary #374151, Secondary #9CA3AF
+- Success #10B981, Error #EF4444
+- Background #FFFFFF, Surface #F9FAFB, Text #111827
 
-### Components
+Styles in src/styles/theme.css. Components: Button, Badge, Card.
 
-This template uses pure HTML/CSS components instead of a UI framework. You can find component styles in `src/App.css`. 
+## Accessibility
 
-Common components include:
-- Buttons (`.btn`, `.btn-large`)
-- Container (`.container`)
-- Navigation (`.navbar`)
-- Typography (`.title`, `.subtitle`, `.description`)
+- Keyboard-accessible sidebar toggle (Topbar ☰ button)
+- ARIA labels for navigation and controls
+- Sufficient color contrast in theme palette
 
-## Learn More
+## API Client
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+services/apiClient.js provides apiFetch(path, options) that:
+- Prefixes with REACT_APP_API_BASE
+- Adds X-Request-Id header
+- Applies a 10s default timeout
+- Parses JSON responses and throws on non-OK
 
-### Code Splitting
+## Feature Flags
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+hooks/useFeatureFlag reads REACT_APP_FEATURE_FLAGS (JSON or comma) and REACT_APP_EXPERIMENTS_ENABLED to enable experimental-* flags.
 
-### Analyzing the Bundle Size
+## Development
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- npm start — dev server
+- npm test — unit tests
+- npm run build — production build
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Keep code modular and avoid logging secrets. All configuration should come from environment variables.
